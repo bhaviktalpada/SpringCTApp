@@ -1,0 +1,22 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+         <!-- Customize your theme here. -->
+        <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
+        <!-- <item name="android:statusBarColor">#000000</item> -->
+        <item name="android:navigationBarColor">#000000</item>
+        <!-- <item name="android:windowTranslucentStatus">true</item> -->
+        <item name="android:windowTranslucentNavigation">false</item>
+    </style>
+    <!-- BootTheme should inherit from Theme.SplashScreen -->
+      <style name="BootTheme" parent="Theme.BootSplash.EdgeToEdge">
+        <!-- <item name="android:statusBarColor">#000000</item> -->
+         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">#000000</item>
+        <!-- <item name="android:windowTranslucentStatus">true</item> -->
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:background">@drawable/bootsplash</item>
+      </style>
+
+</resources>
