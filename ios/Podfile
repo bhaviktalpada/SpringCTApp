@@ -62,7 +62,7 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'ReactNativeAPITask' do
+target 'SpringCTApp' do
   config = use_native_modules!
 
   # Flags change depending on the env values.
@@ -82,7 +82,7 @@ target 'ReactNativeAPITask' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'ReactNativeAPITaskTests' do
+  target 'SpringCTAppTests' do
     inherit! :complete
     # Pods for testing
   end

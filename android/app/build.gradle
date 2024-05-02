@@ -74,9 +74,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.wts.reactNativeTask"
+    namespace "com.springCtApp"
     defaultConfig {
-        applicationId "com.wts.reactNativeTask"
+        applicationId "com.springCtApp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

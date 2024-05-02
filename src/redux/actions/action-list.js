@@ -5,7 +5,7 @@ export const LOGIN_USER = 'LOGIN_USER';
 export const LOGIN_TOKEN = 'LOGIN_TOKEN';
 export const REFRESH_TOKEN = 'REFRESH_TOKEN';
 export const FCM_TOKEN = 'FCM_TOKEN';
-export const USER_PROFILE_INFO = 'USER_PROFILE_INFO';
+export const EMPLOYEES_INFO = 'EMPLOYEES_INFO';
 
 // App
 export const APP_MASTER_DATA = 'APP_MASTER_DATA';

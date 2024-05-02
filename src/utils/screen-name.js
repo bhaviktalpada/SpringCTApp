@@ -1,5 +1,6 @@
 export const SCREEN = {
   LandingScreen: 'landing-screen',
+  LoginScreen: 'login-screen',
   DashboardScreen: 'dashboard-screen',
-  PostDetailScreen: 'post-detail-screen',
+  AddEmployeeScreen: 'add-employee-screen',
 };

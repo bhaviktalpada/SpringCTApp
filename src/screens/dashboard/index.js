@@ -3,88 +3,66 @@ import { Text, View, FlatList, TouchableOpacity } from "react-native";
 
 //Hooks
 import { useDispatch, useSelector } from "react-redux";
+import { scale } from "react-native-size-matters";
 
 import LocalizeText from "../../utils/text-localize";
 import BaseContainer from "../base-container";
 import MainHeader from "../../components/main-header";
-import { TRAIL_URLS, getRequest } from "../../services";
-import ShowToast from "../../components/custom-toast";
-import { toastTypes } from "../../utils/app-enum";
 import { APP } from "../../utils/constants";
 import styles from "./styles";
 import AppBoldText from "../../components/app-bold-text";
 import COLORS from "../../utils/colors";
+import AppCustomButton from "../../components/app-custom-button";
+import { SCREEN } from "../../utils/screen-name";
+import AppRegularText from "../../components/app-regular-text/app-regular-text";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { ImgCloseIcon } from "../../utils/svg-images";
+import { ICON_NAME } from "../../components/custom-vector-icon";
+import {
+  STORE_KEY,
+  asyncStorageGet,
+  asyncStorageRemove,
+} from "../../utils/async-storage";
+import { globalNavigate } from "../../utils/helper-navigations";
 
 export default function DashboardScreen({ navigation }) {
   const { screenTitle, alerts, noData } = LocalizeText;
-  const dispatch = useDispatch();
-  const netConnected = useSelector((v) => v.netInfoReducer.isConnected);
-
   const [isPullLoading, setPullLoading] = useState(false);
-  const [listLoading, setListLoading] = useState(true);
-  const [isLoading, setLoading] = useState(false);
-  const [postList, setPostList] = useState([]);
-  const [selectedItemId, setSelectedItemId] = useState(null);
 
-  useEffect(() => {
-    getAllPosts();
-  }, []);
+  const savedEmployee = useSelector((v) => v.stateReducer.savedEmployee);
 
-  function getAllPosts(page) {
-    if (netConnected) {
-      setListLoading(true);
-      const api = `${TRAIL_URLS.rootPost}`;
+  const [allEmployee, setAllEmployee] = useState(false);
+  const [refresh, setRefresh] = useState();
+  const isFocused = useIsFocused();
 
-      getRequest(api)
-        .then((response) => {
-          if (APP.SHOW_LOG) {
-            console.log(" Get Posts; ==>", JSON.stringify(response));
-          }
-          const messages = response;
-          setPostList(messages);
-          setListLoading(false);
-        })
-        .catch((e) => {
-          console.log("error in fetching categories list:", e);
-          setListLoading(false);
-          setPullLoading(false);
-        });
-    } else {
-      ShowToast(toastTypes.error, alerts.internetConnection);
-    }
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("isFocused", isFocused);
+      if (isFocused) {
+        setRefresh(Math.random());
+        fetchAllData();
+      }
+    }, [isFocused])
+  );
+
+  async function fetchAllData() {
+    const allEmp = await asyncStorageGet(STORE_KEY.STORE_EMPLOYEES_INFO);
+    const restoredArray = JSON.parse(allEmp);
+    console.log("allEmp", restoredArray);
+    setAllEmployee(restoredArray);
   }
 
-  const handleItemPress = (itemId) => {
-    if (netConnected) {
-      const api = `${TRAIL_URLS.rootPost}/${itemId}`;
-      getRequest(api)
-        .then((response) => {
-          if (APP.SHOW_LOG) {
-            console.log(" Get Posts; ==>", JSON.stringify(response));
-          }
-          setSelectedItemId(response);
-        })
-        .catch((e) => {
-          console.log("error in fetching categories list:", e);
-        });
-    } else {
-      ShowToast(toastTypes.error, alerts.internetConnection);
-    }
-  };
+  const handleItemPress = (itemId) => {};
 
-  const heavyComputation = (item) => {
-    // Simulating heavy computation with a setTimeout
-    const startTime = Date.now();
-    setTimeout(() => {
-      const endTime = Date.now();
-      console.log(
-        `Heavy computation time for item ${item.id}: ${endTime - startTime}ms`
-      );
-    }, 1000); // Adjust timeout duration as needed
+  async function logoutButtonPress() {
+    await asyncStorageRemove(STORE_KEY.LOGIN_TOKEN);
+    await asyncStorageRemove(STORE_KEY.STORE_EMPLOYEES_INFO);
 
-    // Return computed details
-    return `Computed details for item ${item.id}`;
-  };
+    globalNavigate(SCREEN.LoginScreen);
+  }
+  function addEmployeeHandler() {
+    navigation.navigate(SCREEN.AddEmployeeScreen);
+  }
 
   const ListItem = ({ item, onPress }) => {
     const memoizedOnPress = useCallback(
@@ -92,7 +70,13 @@ export default function DashboardScreen({ navigation }) {
       [item.id, onPress]
     );
 
-    const { userId = "", id = "", title = "", body = "" } = item;
+    const {
+      firstName = "",
+      lastName = "",
+      age = "",
+      addressLine1 = "",
+      city = "",
+    } = item;
 
     return (
       <TouchableOpacity onPress={memoizedOnPress}>
@@ -103,14 +87,27 @@ export default function DashboardScreen({ navigation }) {
               numberOfLines={0}
               color={COLORS.colorGray6C}
             >
-              {`${id}. ${title}`}
+              {`${firstName} ${lastName} - (${age}) Age`}
             </AppBoldText>
+            <AppRegularText
+              sizeFont={APP.APP_NOTIFICATION_COUNT_FONT_SIZE}
+              numberOfLines={0}
+              color={COLORS.colorGray6C}
+            >
+              {`${addressLine1}, ${city}`}
+            </AppRegularText>
           </View>
-          <Text>{useMemo(() => heavyComputation(item), [item])}</Text>
         </View>
       </TouchableOpacity>
     );
   };
+
+  function onRefresh() {
+    setPullLoading(true);
+    setTimeout(() => {
+      setPullLoading(false);
+    }, 300);
+  }
 
   return (
     <BaseContainer isTopSafeArea={false} isBottomSafeArea={true}>
@@ -119,37 +116,31 @@ export default function DashboardScreen({ navigation }) {
       <FlatList
         keyExtractor={(_, index) => String(index)}
         style={styles.flatListStyle}
-        data={postList}
-        renderItem={({ item }) => (
-          <ListItem item={item} onPress={handleItemPress} />
+        refreshing={isPullLoading}
+        onRefresh={onRefresh}
+        data={allEmployee}
+        renderItem={({ item, i }) => (
+          <ListItem key={i} item={item} onPress={handleItemPress} />
         )}
       />
-      {selectedItemId && (
-        <View style={{ marginHorizontal: 10, marginBottom: 10 }}>
-          <Text>{`Details for item ID ${selectedItemId.id}:`}</Text>
 
-          <View style={styles.contentView}>
-            <View style={styles.nameRowViewStyle}>
-              <AppBoldText
-                sizeFont={APP.DEFAULT_TEXT_INPUT_LABEL_SIZE}
-                numberOfLines={0}
-                color={COLORS.colorGray6C}
-              >
-                {`${selectedItemId.id}. ${selectedItemId.title}`}
-              </AppBoldText>
-            </View>
-            <View style={styles.nameRowViewStyle}>
-              <AppBoldText
-                sizeFont={APP.DEFAULT_TEXT_INPUT_LABEL_SIZE}
-                numberOfLines={0}
-                color={COLORS.colorYellowE1}
-              >
-                {`${selectedItemId.body}`}
-              </AppBoldText>
-            </View>
-          </View>
-        </View>
-      )}
+      <AppCustomButton
+        onPress={addEmployeeHandler}
+        title={"Add Employee"}
+        mainContainerStyle={{
+          marginTop: scale(10),
+          marginHorizontal: scale(20),
+        }}
+      />
+      <AppCustomButton
+        onPress={logoutButtonPress}
+        title={"Logout"}
+        viewStyle={{ backgroundColor: "red", marginBottom: 10 }}
+        mainContainerStyle={{
+          marginTop: scale(10),
+          marginHorizontal: scale(20),
+        }}
+      />
     </BaseContainer>
   );
 }

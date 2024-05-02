@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
-import COLORS from "../../utils/colors";
+
 import { APP } from "../../utils/constants";
+import COLORS from "../../utils/colors";
 const { scale } = require("react-native-size-matters");
 
 export default styles = StyleSheet.create({
@@ -17,8 +18,6 @@ export default styles = StyleSheet.create({
   },
   mainContainer: {},
   nameRowViewStyle: {
-    flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
   },
 });

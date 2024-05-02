@@ -1,8 +1,8 @@
 import * as types from './action-list';
 
-export const setUserProfileInfo = userProfileData => ({
-  type: types.USER_PROFILE_INFO,
-  data: userProfileData,
+export const setUserProfileInfo = userEmployeeData => ({
+  type: types.EMPLOYEES_INFO,
+  data: userEmployeeData,
 })
 
 // For set the application orientation e.g. portrait or landscape

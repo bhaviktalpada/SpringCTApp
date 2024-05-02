@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { EMPLOYEES_INFO } from '../redux/actions/action-list';
 
 const STORE_KEY = {
   FCM_TOKEN: 'STORE_FCM_TOKEN',
   DEVICE_INFO: 'STORE_DEVICE_INFO',
   LOGIN_TOKEN: 'STORE_LOGIN_TOKEN',
   REFRESH_TOKEN: 'STORE_REFRESH_TOKEN',
+  STORE_EMPLOYEES_INFO: 'STORE_EMPLOYEE_INFO',
 };
 
 async function asyncStorageSave(key, value) {

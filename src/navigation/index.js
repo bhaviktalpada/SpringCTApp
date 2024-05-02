@@ -15,12 +15,13 @@ import {
 
 import {STORE_KEY, storeJsonValueAsync} from '../utils/async-storage';
 import {MOBILE_PLATFORM, PLATFORM_MOBILE} from '../utils/app-enum';
-import LocalizeText from '../utils/text-localize';
+
 
 //Screens
 import LandingScreen from '../screens/auth/landing';
+import LoginScreen from '../screens/auth/login';
 import DashboardScreen from '../screens/dashboard';
-import PostDetailScreen from '../screens/postdetail';
+import AddEmployeeScreen from '../screens/addEmployee';
 
 import {SCREEN} from '../utils/screen-name';
 import {APP} from '../utils/constants';
@@ -86,14 +87,15 @@ export default function Route() {
         initialRouteName={SCREEN.LandingScreen}
         screenOptions={{headerShown: false, orientation: 'portrait'}}>
         <Stack.Screen name={SCREEN.LandingScreen} component={LandingScreen} />
+        <Stack.Screen name={SCREEN.LoginScreen} component={LoginScreen} />
         
         <Stack.Screen
           name={SCREEN.DashboardScreen}
           component={DashboardScreen}
         />
         <Stack.Screen
-          name={SCREEN.PostDetailScreen}
-          component={PostDetailScreen}
+          name={SCREEN.AddEmployeeScreen}
+          component={AddEmployeeScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -3,12 +3,16 @@ import {
   SET_APP_STATE,
   SET_DEVICE_ORIENTATION,
   CLEAR_DATA,
-} from '../actions/action-list';
+  LOGIN_TOKEN,
+  EMPLOYEES_INFO,
+} from "../actions/action-list";
 
 const initialState = {
   deviceOrientation: undefined,
   appState: undefined,
   deviceInfo: null,
+  userToken: null,
+  savedEmployee: null,
 };
 
 const stateReducer = (state = initialState, action) => {
@@ -31,6 +35,19 @@ const stateReducer = (state = initialState, action) => {
       return {
         ...state,
         deviceInfo: action.data,
+      };
+    }
+
+    case LOGIN_TOKEN: {
+      return {
+        ...state,
+        userToken: action.data,
+      };
+    }
+    case EMPLOYEES_INFO: {
+      return {
+        ...state,
+        savedEmployee: action.data,
       };
     }
 

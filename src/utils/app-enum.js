@@ -33,3 +33,8 @@ export const FILE_TYPE = {
   Video: 'Video',
   File: 'File',
 };
+export const API_REQUEST_METHOD = {
+  POST: 'POST',
+  GET: 'GET',
+  PUT: 'PUT',
+};
